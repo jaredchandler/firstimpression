@@ -1,11 +1,25 @@
 from twisted.conch import recvline, avatar
-from twisted.conch.interfaces import IConchUser, ISession
+from twisted.conch.interfaces import IConchUser, ISession, IUsernamePassword, ICredentialsChecker
 from twisted.conch.ssh import factory, keys, session
 from twisted.conch.insults import insults
 from twisted.cred import portal, checkers
 from twisted.internet import reactor
 from zope.interface import implementer
 
+
+class PasswordChecker(object):
+    """
+    A very simple username/password checker which authenticates anyone whose
+    password matches their username and rejects all others.
+    """
+    credentialInterfaces = (IUsernamePassword,)
+    implements(ICredentialsChecker)
+
+
+    def requestAvatarId(self, creds):
+        if creds.username == creds.password:
+            return defer.succeed(creds.username)
+        return defer.fail(UnauthorizedLogin("Invalid username/password pair"))
 
 class SSHDemoProtocol(recvline.HistoricRecvLine):
     def __init__(self, user):
