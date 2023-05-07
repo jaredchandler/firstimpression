@@ -7,3 +7,7 @@ EOF
 sudo systemctl daemon-reload
 sudo systemctl restart ssh
 ssh-keygen -t rsa -b 4096 -C "lihs@punkt.de" -f foo
+
+pip3 install twisted
+pip3 install pyOpenSSL
+pip3 install service_identity
