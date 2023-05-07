@@ -11,3 +11,13 @@ class PasswordChecker(object):
         if creds.username == creds.password:
             return defer.succeed(creds.username)
         return defer.fail(UnauthorizedLogin("Invalid username/password pair"))
+        
+ def connectionMade(self):
+    """
+    Called when the connection is made to the other side.  We sent our
+    version and the MSG_KEXINIT packet.
+    """
+    self.transport.write(self.ourVersionString + b"\r\n")
+    self.currentEncryptions = SSHCiphers(b"none", b"none", b"none", b"none")
+    self.currentEncryptions.setKeys(b"", b"", b"", b"", b"", b"")
+    self.sendKexInit()
