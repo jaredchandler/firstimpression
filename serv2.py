@@ -6,7 +6,7 @@ from twisted.cred import portal, checkers
 from twisted.internet import reactor
 from zope.interface import implementer
 
-
+# SSHTransportBase(protocol.Protocol):
 class SSHDemoProtocol(recvline.HistoricRecvLine):
     def __init__(self, user):
        self.user = user
@@ -116,6 +116,11 @@ def getRSAKeys():
  
 if __name__ == "__main__":
     sshFactory = factory.SSHFactory()
+    print(type(sshFactory))
+    sshFactory.protocol.ourVersionString = b'SSH-2.0-OpenSSH_9.0p1 Ubuntu-1ubuntu7'
+    def connectionMade(self):
+        self.transport.write(self.ourVersionString + b"\r\n")
+    #sshFactory.protocol.connectionMade = connectionMade
     sshFactory.portal = portal.Portal(SSHDemoRealm())
  
 users = {'admin': b'aaa', 'guest': b'bbb'}
