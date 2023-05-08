@@ -1,3 +1,5 @@
+systemctl disable --now ssh.service
+systemctl enable --now ssh.socket
 mkdir -p /etc/systemd/system/ssh.socket.d
 cat >/etc/systemd/system/ssh.socket.d/listen.conf <<EOF
 [Socket]
