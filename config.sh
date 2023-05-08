@@ -12,3 +12,4 @@ apt install python3-pip -y
 pip3 install twisted
 pip3 install pyOpenSSL
 pip3 install service_identity
+pip3 install zope
