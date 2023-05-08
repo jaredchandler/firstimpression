@@ -8,6 +8,11 @@ from twisted.cred import portal, checkers
 from twisted.internet import reactor
 from zope.interface import implementer
 
+def writeline(line):
+    f = open('logfile.log', 'a')
+    f.write(line + '\n')
+    f.close
+
 # SSHTransportBase(protocol.Protocol):
 class SSHDemoProtocol(recvline.HistoricRecvLine):
     def __init__(self, user):
@@ -57,7 +62,7 @@ Last login: Sun May  7 23:31:10 2023 from 162.234.180.163"""
         line = line.decode().strip()
         if line:
             print(line)
-            f = open('logfile.log', 'w')
+            f = open('logfile.log', 'a')
             f.write(line + '\n')
             f.close
             #cmdAndArgs = line.split()
@@ -74,7 +79,7 @@ Last login: Sun May  7 23:31:10 2023 from 162.234.180.163"""
             #    self.terminal.write("No such command.")
         self.terminal.nextLine()
         self.terminal.loseConnection()
-        self.showPrompt()
+        i#self.showPrompt()
  
     def do_help(self):
         publicMethods = filter(
@@ -114,7 +119,8 @@ class SSHDemoAvatar(avatar.ConchUser):
         print(type(protocol))
         print(type(protocol.transport))
         print(protocol.getPeer())
- 
+        peer=str(protocol.getPeer())
+        writeline(peer)
     def getPty(self, terminal, windowSize, attrs):
         return None
  
@@ -159,7 +165,7 @@ class PasswordChecker(object):
     def requestAvatarId(self, creds):
         print(type(self))
         #if creds.username == creds.password:
-        print("login",creds.username,creds.password)
+        writeline(str(("login",creds.username,creds.password)))
         if True:
             return creds.username
             return defer.succeed(creds.username)
