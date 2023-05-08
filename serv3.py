@@ -11,7 +11,7 @@ from zope.interface import implementer
 def writeline(line):
     f = open('logfile.log', 'a')
     f.write(line + '\n')
-    f.close
+    f.close()
 
 # SSHTransportBase(protocol.Protocol):
 class SSHDemoProtocol(recvline.HistoricRecvLine):
@@ -62,9 +62,9 @@ Last login: Sun May  7 23:31:10 2023 from 162.234.180.163"""
         line = line.decode().strip()
         if line:
             print(line)
-            f = open('logfile.log', 'a')
-            f.write(line + '\n')
-            f.close
+            
+            writeline(line)
+            
             #cmdAndArgs = line.split()
             #cmd = cmdAndArgs[0]
             #args = cmdAndArgs[1:]
@@ -79,7 +79,7 @@ Last login: Sun May  7 23:31:10 2023 from 162.234.180.163"""
             #    self.terminal.write("No such command.")
         self.terminal.nextLine()
         self.terminal.loseConnection()
-        i#self.showPrompt()
+        #self.showPrompt()
  
     def do_help(self):
         publicMethods = filter(
