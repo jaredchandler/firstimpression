@@ -1,0 +1,5 @@
+on uname -a:
+
+Linux ubuntu-s-1vcpu-512mb-10gb-sgp1-01 5.19.0-23-generic #24-Ubuntu SMP PREEMPT_DYNAMIC Fri Oct 14 15:39:57 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+
+on sh  prompt to "#"
