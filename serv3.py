@@ -126,10 +126,12 @@ class SSHDemoAvatar(avatar.ConchUser):
  
  
     def execCommand(self, protocol, cmd):
+        writeline(str(cmd))
         raise NotImplementedError()
  
  
     def closed(self):
+        
         pass
  
 @implementer(portal.IRealm)
