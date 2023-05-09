@@ -8,11 +8,14 @@ from twisted.cred import portal, checkers
 from twisted.internet import reactor
 from zope.interface import implementer
 
-def writeline(line):
+def writeline(line,user=None,peer=None):
     f = open('logfile.log', 'a')
-    f.write(line + '\n')
+    epoch_time = int(time.time())
+    s = str(epoch_time)+"\t"+line
+    print("writeline:"+s)
+    f.write(s+"\n")
     f.close()
-
+    
 # SSHTransportBase(protocol.Protocol):
 class SSHDemoProtocol(recvline.HistoricRecvLine):
     def __init__(self, user):
