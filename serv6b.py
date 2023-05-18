@@ -5,7 +5,7 @@ from twisted.cred.credentials import IUsernamePassword
 from twisted.conch.ssh import factory, keys, session
 from twisted.conch.insults import insults
 from twisted.cred import portal, checkers
-from twisted.internet import reactor
+from twisted.internet import reactor, protocol
 from zope.interface import implementer
 
 from datetime import datetime
@@ -34,6 +34,18 @@ def gettime():
         d = ' '+d[1]
     return "System information as of "+a + " " + d + ' ' + c
 # SSHTransportBase(protocol.Protocol):
+
+class EchoProtocol(protocol.Protocol):
+    """this is our example protocol that we will run over SSH
+    """
+    def dataReceived(self, data):
+        if data == '\r':
+            data = '\r\n'
+        elif data == '\x03': #^C
+            self.transport.loseConnection()
+            return
+        self.transport.write(data)
+
 class SSHDemoProtocol(recvline.HistoricRecvLine):
     def __init__(self, user):
        self.user = user
@@ -226,14 +238,18 @@ class SSHDemoAvatar(avatar.ConchUser):
         self.channelLookup.update({b'session': session.SSHSession})
         self.cmd = None 
  
-    def openShell(self, protocol):
+    def xopenShell(self, protocol):
 
-        self.peer = prot2addr(protocol)
-        writeline("openShell",peer=self.peer,user=self.username)
+        #self.peer = prot2addr(protocol)
+        #writeline("openShell",peer=self.peer,user=self.username)
 
-        serverProtocol = insults.ServerProtocol(SSHDemoProtocol, self)
-        serverProtocol.makeConnection(protocol)
-        protocol.makeConnection(session.wrapProtocol(serverProtocol))
+        #serverProtocol = insults.ServerProtocol(SSHDemoProtocol, self)
+        #serverProtocol.makeConnection(protocol)
+        #protocol.makeConnection(session.wrapProtocol(serverProtocol))
+    def openShell(self, trans):
+        ep = EchoProtocol()
+        ep.makeConnection(trans)
+        trans.makeConnection(session.wrapProtocol(ep))
 
     def getPty(self, terminal, windowSize, attrs):
         return None
